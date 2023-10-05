@@ -8,12 +8,14 @@
     "scripts": {
         "build": "tsc",
         "start": "node .",
-        "dev": "tsc && node .",
+        "dev": "nodemon src/index.ts",
         "register": "node dist/scripts/register.js",
         "register-dev": "tsc && node dist/scripts/register-dev.js"
     },
     "devDependencies": {
         "@types/source-map-support": "^0.5.6",
+        "nodemon": "^3.0.1",
+        "ts-node": "^10.9.1",
         "typescript": "^5.0.4"
     },
     "dependencies": {

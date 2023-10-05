@@ -51,7 +51,11 @@ export async function leaderboardFields(
     }
 
     const firstPageEntries = Object.entries(playerStandings)
-        .sort((a, b) => b[1].points - a[1].points)
+        .sort(
+            (a, b) =>
+                b[1].points - a[1].points ||
+                b[1].wins / b[1].matches - a[1].wins / a[1].matches
+        )
         .slice(0, 25);
 
     if (!firstPageEntries.length) return [];
