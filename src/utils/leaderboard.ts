@@ -7,7 +7,7 @@ interface PlayerStanding {
     matches: number;
     wins: number;
     losses: number;
-    draws: 0;
+    draws: number;
     points: number;
 }
 
