@@ -5,7 +5,7 @@ export interface IMatch extends Document {
     guildId: string;
     channelId?: string;
     messageId?: string;
-    winnerUserId: string;
+    winnerUserId?: string;
     disputeThreadId?: string;
     season: Types.ObjectId;
     players: IMatchPlayer[];
@@ -22,7 +22,7 @@ const matchSchema = new Schema({
     guildId: { type: String, required: true },
     channelId: String,
     messageId: String,
-    winnerUserId: { type: String, required: true },
+    winnerUserId: String,
     disputeThreadId: String,
     season: { type: Schema.Types.ObjectId, ref: 'Season', required: true },
     players: [

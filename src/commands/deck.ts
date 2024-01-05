@@ -450,7 +450,9 @@ async function handleStats(
         (match) => match.winnerUserId === interaction.user.id
     ).length;
 
-    const losses = matches.length - wins;
+    const draws = matches.filter((match) => !match.winnerUserId).length;
+
+    const losses = matches.length - wins - draws;
 
     let matchesPlayedText = `You played this deck in ${matches.length} game${
         matches.length === 1 ? '' : 's'
@@ -459,6 +461,10 @@ async function handleStats(
     let matchesWonText = `You won with this deck in ${wins} game${
         wins === 1 ? '' : 's'
     }`;
+
+    let matchesDrawnText = `You had ${draws} draw${
+        draws === 1 ? '' : 's'
+    } with this deck`;
 
     let matchesLostText = `You lost with this deck in ${losses} game${
         losses === 1 ? '' : 's'
@@ -482,10 +488,15 @@ async function handleStats(
             (match) => match.winnerUserId === interaction.user.id
         ).length;
 
-        const seasonLosses = seasonMatches.length - seasonWins;
+        const seasonDraws = seasonMatches.filter(
+            (match) => !match.winnerUserId
+        ).length;
+
+        const seasonLosses = seasonMatches.length - seasonWins - seasonDraws;
 
         matchesPlayedText += ` (${seasonMatches.length} this season)`;
         matchesWonText += ` (${seasonWins} this season)`;
+        matchesDrawnText += ` (${seasonDraws} this season)`;
         matchesLostText += ` (${seasonLosses} this season)`;
         winRateText += ` (${Math.floor(
             (seasonWins / (seasonMatches.length || 1)) * 100
@@ -495,6 +506,7 @@ async function handleStats(
     embed.addFields([
         { name: 'Matches', value: matchesPlayedText + '.' },
         { name: 'Wins', value: matchesWonText + '.' },
+        { name: 'Draws', value: matchesDrawnText + '.' },
         { name: 'Losses', value: matchesLostText + '.' },
         { name: 'Win Rate', value: winRateText + '.' },
     ]);

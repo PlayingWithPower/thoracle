@@ -3,6 +3,14 @@ import { IConfig } from '../database/Config';
 import { IMatch, Match } from '../database/Match';
 import { ISeason } from '../database/Season';
 
+interface PlayerStanding {
+    matches: number;
+    wins: number;
+    losses: number;
+    draws: 0;
+    points: number;
+}
+
 export async function leaderboardFields(
     guildId: string,
     config: IConfig,
@@ -14,10 +22,7 @@ export async function leaderboardFields(
         $nor: [{ 'players.confirmed': false }],
     });
 
-    const playerStandings: Record<
-        string,
-        { matches: number; wins: number; losses: number; points: number }
-    > = {};
+    const playerStandings: Record<string, PlayerStanding> = {};
 
     for (const match of matches) {
         for (const { userId } of match.players) {
@@ -26,6 +31,7 @@ export async function leaderboardFields(
                     matches: 0,
                     wins: 0,
                     losses: 0,
+                    draws: 0,
                     points: 0,
                 };
             }
@@ -34,7 +40,10 @@ export async function leaderboardFields(
 
             standing.matches++;
 
-            if (userId === match.winnerUserId) {
+            if (!match.winnerUserId) {
+                standing.draws++;
+                standing.points += config.pointsPerDraw;
+            } else if (userId === match.winnerUserId) {
                 standing.wins++;
                 standing.points += config.pointsGained;
             } else {

@@ -7,6 +7,8 @@ export interface IConfig extends Document {
     pointsGained: number;
     pointsLost: number;
     basePoints: number;
+    pointsPerDraw: number;
+    enableDraws: boolean;
     deckLimit: number;
     disputeRoleId?: string;
 }
@@ -16,6 +18,8 @@ const configSchema = new Schema({
     minimumGamesPerPlayer: { type: Number, default: 10 },
     pointsGained: { type: Number, default: 1 },
     pointsLost: { type: Number, default: 0 },
+    pointsPerDraw: { type: Number, default: 0 },
+    enableDraws: { type: Boolean, default: true },
     basePoints: { type: Number, default: 100 },
     deckLimit: { type: Number, default: 50 },
     disputeRoleId: String,
