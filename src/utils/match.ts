@@ -62,7 +62,7 @@ export async function logMatch(
                     isWin ? 'win for the player who logged it' : 'draw'
                 }.`,
                 'Click below to confirm whether or not the match details are correct.',
-            ].join('\n\n')
+            ].join(' ')
         )
         .setFooter({
             text: `Match Id: (${matchId.toString()})`,

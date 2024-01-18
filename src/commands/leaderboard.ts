@@ -48,7 +48,7 @@ export = <Command>{
                     ? 'These are the standings for the season.'
                     : 'Not enough matches have been logged yet.'
             )
-            .setColor('Blue')
+            .setColor('Purple')
             .addFields(fields);
 
         await interaction.reply({ embeds: [embed] });
