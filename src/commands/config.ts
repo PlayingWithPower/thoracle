@@ -33,6 +33,24 @@ const configPointsLost = newSubcommand()
         option.setName('amount').setDescription('Number of points lost.')
     );
 
+const configPointsPerDraw = newSubcommand()
+    .setName('points-per-draw')
+    .setDescription('Points gained after drawing a match.')
+    .addIntegerOption((option) =>
+        option.setName('amount').setDescription('Number of points gained.')
+    );
+
+const configEnableDraws = newSubcommand()
+    .setName('enable-draws')
+    .setDescription(
+        'Whether or not players are allowed to log a match as a draw.'
+    )
+    .addBooleanOption((option) =>
+        option
+            .setName('enabled')
+            .setDescription('Whether or not draws are enabled.')
+    );
+
 const configBasePoints = newSubcommand()
     .setName('base-points')
     .setDescription('Points added to values when displayed.')
@@ -63,6 +81,8 @@ export = <Command>{
         .addSubcommand(configPointsGained)
         .addSubcommand(configPointsLost)
         .addSubcommand(configBasePoints)
+        .addSubcommand(configPointsPerDraw)
+        .addSubcommand(configEnableDraws)
         .addSubcommand(configDeckLimit)
         .addSubcommand(configDisputeRole)
         .setDefaultMemberPermissions(PermissionsBitField.Flags.ManageGuild),
@@ -87,6 +107,20 @@ export = <Command>{
                 await handlePointsLost(
                     interaction,
                     interaction.options.getInteger('amount')
+                );
+                break;
+
+            case 'points-per-draw':
+                await handlePointsPerDraw(
+                    interaction,
+                    interaction.options.getInteger('amount')
+                );
+                break;
+
+            case 'enable-draws':
+                await handleEnableDraws(
+                    interaction,
+                    interaction.options.getBoolean('enabled')
                 );
                 break;
 
@@ -165,6 +199,42 @@ async function handlePointsLost(
         content: `The points lost per match loss is ${
             amount === null ? 'currently' : 'now'
         } ${config.pointsLost}.`,
+        ephemeral: true,
+    });
+}
+
+async function handlePointsPerDraw(
+    interaction: ChatInputCommandInteraction,
+    amount: number | null
+) {
+    const config = await fetchConfig(interaction.guildId!, {
+        $set: {
+            pointsPerDraw: amount ?? undefined,
+        },
+    });
+
+    await interaction.reply({
+        content: `The points gained per match logged as a draw is ${
+            amount === null ? 'currently' : 'now'
+        } ${config.pointsPerDraw}.`,
+        ephemeral: true,
+    });
+}
+
+async function handleEnableDraws(
+    interaction: ChatInputCommandInteraction,
+    enabled: boolean | null
+) {
+    const config = await fetchConfig(interaction.guildId!, {
+        $set: {
+            enableDraws: enabled ?? undefined,
+        },
+    });
+
+    await interaction.reply({
+        content: `Draws are ${enabled === null ? 'currently' : 'now'} ${
+            config.enableDraws ? 'enabled' : 'disabled'
+        }.`,
         ephemeral: true,
     });
 }

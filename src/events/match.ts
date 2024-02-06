@@ -180,7 +180,7 @@ export async function handleCancelMatch(
     interaction: ButtonInteraction,
     match: IMatch
 ) {
-    if (interaction.user.id !== match.winnerUserId) {
+    if (interaction.user.id !== match.players[0]?.userId) {
         return await interaction.reply({
             content: 'You did not log this match.',
             ephemeral: true,

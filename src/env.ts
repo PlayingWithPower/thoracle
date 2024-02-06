@@ -15,3 +15,7 @@ if (!GUILD_ID) throw new Error('Missing `GUILD_ID` environment variable.');
 export const DATABASE_URI = process.env.DATABASE_URI!;
 if (!DATABASE_URI)
     throw new Error('Missing `DATABASE_URI` environment variable.');
+
+export const SUPPORT_SERVER = process.env.SUPPORT_SERVER!;
+if (!SUPPORT_SERVER)
+    throw new Error('Missing `SUPPORT_SERVER` environment variable.');

@@ -3,8 +3,8 @@ import { Command, newCommand } from '../types/Command';
 import { logMatch } from '../utils/match';
 
 const command = newCommand()
-    .setName('log')
-    .setDescription('Logs a match with you as the winner.')
+    .setName('draw')
+    .setDescription('Logs a match that ended as a draw.')
     .addUserOption((option) =>
         option
             .setName('player-1')
@@ -36,7 +36,7 @@ export = <Command>{
                 interaction.options.getUser('player-2', true).id,
                 interaction.options.getUser('player-3', true).id,
             ],
-            true
+            false
         );
     },
 };
