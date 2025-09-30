@@ -1,6 +1,7 @@
 import { ChatInputCommandInteraction, EmbedBuilder } from 'discord.js';
 import { SUPPORT_SERVER } from '../env';
 import { Command, newCommand } from '../types/Command';
+import { createShutdownWarningEmbed } from '../utils/warning';
 
 const command = newCommand()
     .setName('info')
@@ -36,7 +37,7 @@ export = <Command>{
         });
 
         await interaction.reply({
-            embeds: [embed],
+            embeds: [createShutdownWarningEmbed(), embed],
             ephemeral: true,
         });
     },

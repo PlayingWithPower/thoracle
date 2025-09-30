@@ -5,6 +5,7 @@ import { IMatch, Match } from '../database/Match';
 import { ISeason, Season } from '../database/Season';
 import { Command, newCommand, newSubcommand } from '../types/Command';
 import { matchListFields } from '../utils/match';
+import { createShutdownWarningEmbed } from '../utils/warning';
 
 const command = newCommand()
     .setName('match')
@@ -132,7 +133,7 @@ async function handlePending(interaction: ChatInputCommandInteraction) {
         .addFields(fields);
 
     await interaction.reply({
-        embeds: [embed],
+        embeds: [createShutdownWarningEmbed(), embed],
         ephemeral: true,
     });
 }
@@ -182,7 +183,7 @@ async function handleDisputed(interaction: ChatInputCommandInteraction) {
         .addFields(fields);
 
     await interaction.reply({
-        embeds: [embed],
+        embeds: [createShutdownWarningEmbed(), embed],
         ephemeral: true,
     });
 }
@@ -354,7 +355,7 @@ async function handleList(
         .addFields(fields);
 
     await interaction.reply({
-        embeds: [embed],
+        embeds: [createShutdownWarningEmbed(), embed],
         ephemeral: true,
     });
 }

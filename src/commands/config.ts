@@ -7,6 +7,7 @@ import {
 } from 'discord.js';
 import { IConfig, fetchConfig } from '../database/Config';
 import { Command, newCommand, newSubcommand } from '../types/Command';
+import { createShutdownWarningEmbed } from '../utils/warning';
 
 const command = newCommand()
     .setName('config')
@@ -159,10 +160,14 @@ async function handleMinimumGames(
         },
     });
 
-    await interaction.reply({
-        content: `The minimum games per player is ${
+    const embed = new EmbedBuilder()
+        .setDescription(`The minimum games per player is ${
             amount === null ? 'currently' : 'now'
-        } ${config.minimumGamesPerPlayer}.`,
+        } ${config.minimumGamesPerPlayer}.`)
+        .setColor('Blue');
+
+    await interaction.reply({
+        embeds: [createShutdownWarningEmbed(), embed],
         ephemeral: true,
     });
 }
@@ -177,10 +182,14 @@ async function handlePointsGained(
         },
     });
 
-    await interaction.reply({
-        content: `The points gained per match win is ${
+    const embed = new EmbedBuilder()
+        .setDescription(`The points gained per match win is ${
             amount === null ? 'currently' : 'now'
-        } ${config.pointsGained}.`,
+        } ${config.pointsGained}.`)
+        .setColor('Blue');
+
+    await interaction.reply({
+        embeds: [createShutdownWarningEmbed(), embed],
         ephemeral: true,
     });
 }
@@ -195,10 +204,14 @@ async function handlePointsLost(
         },
     });
 
-    await interaction.reply({
-        content: `The points lost per match loss is ${
+    const embed = new EmbedBuilder()
+        .setDescription(`The points lost per match loss is ${
             amount === null ? 'currently' : 'now'
-        } ${config.pointsLost}.`,
+        } ${config.pointsLost}.`)
+        .setColor('Blue');
+
+    await interaction.reply({
+        embeds: [createShutdownWarningEmbed(), embed],
         ephemeral: true,
     });
 }
@@ -213,10 +226,14 @@ async function handlePointsPerDraw(
         },
     });
 
-    await interaction.reply({
-        content: `The points gained per match logged as a draw is ${
+    const embed = new EmbedBuilder()
+        .setDescription(`The points gained per match logged as a draw is ${
             amount === null ? 'currently' : 'now'
-        } ${config.pointsPerDraw}.`,
+        } ${config.pointsPerDraw}.`)
+        .setColor('Blue');
+
+    await interaction.reply({
+        embeds: [createShutdownWarningEmbed(), embed],
         ephemeral: true,
     });
 }
@@ -231,10 +248,14 @@ async function handleEnableDraws(
         },
     });
 
-    await interaction.reply({
-        content: `Draws are ${enabled === null ? 'currently' : 'now'} ${
+    const embed = new EmbedBuilder()
+        .setDescription(`Draws are ${enabled === null ? 'currently' : 'now'} ${
             config.enableDraws ? 'enabled' : 'disabled'
-        }.`,
+        }.`)
+        .setColor('Blue');
+
+    await interaction.reply({
+        embeds: [createShutdownWarningEmbed(), embed],
         ephemeral: true,
     });
 }
@@ -249,10 +270,14 @@ async function handleBasePoints(
         },
     });
 
-    await interaction.reply({
-        content: `The points added to values when displayed is ${
+    const embed = new EmbedBuilder()
+        .setDescription(`The points added to values when displayed is ${
             amount === null ? 'currently' : 'now'
-        } ${config.basePoints}.`,
+        } ${config.basePoints}.`)
+        .setColor('Blue');
+
+    await interaction.reply({
+        embeds: [createShutdownWarningEmbed(), embed],
         ephemeral: true,
     });
 }
@@ -267,10 +292,14 @@ async function handleDeckLimit(
         },
     });
 
-    await interaction.reply({
-        content: `The maximum decks a player can have is ${
+    const embed = new EmbedBuilder()
+        .setDescription(`The maximum decks a player can have is ${
             amount === null ? 'currently' : 'now'
-        } ${config.basePoints}.`,
+        } ${config.deckLimit}.`)
+        .setColor('Blue');
+
+    await interaction.reply({
+        embeds: [createShutdownWarningEmbed(), embed],
         ephemeral: true,
     });
 }
@@ -296,12 +325,16 @@ async function handleDisputeRole(
         });
     }
 
-    await interaction.reply({
-        content: `The dispute role is ${
+    const embed = new EmbedBuilder()
+        .setDescription(`The dispute role is ${
             role === null && !unset ? 'currently' : 'now'
         } ${
             config.disputeRoleId ? roleMention(config.disputeRoleId) : 'unset'
-        }.`,
+        }.`)
+        .setColor('Blue');
+
+    await interaction.reply({
+        embeds: [createShutdownWarningEmbed(), embed],
         ephemeral: true,
     });
 }

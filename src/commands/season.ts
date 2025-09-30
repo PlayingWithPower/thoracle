@@ -7,6 +7,7 @@ import {
 import { Match } from '../database/Match';
 import { ISeason, Season } from '../database/Season';
 import { Command, newCommand, newSubcommand } from '../types/Command';
+import { createShutdownWarningEmbed } from '../utils/warning';
 
 const command = newCommand()
     .setName('season')
@@ -107,7 +108,7 @@ async function handleInfo(
         );
 
     await interaction.reply({
-        embeds: [embed],
+        embeds: [createShutdownWarningEmbed(), embed],
         ephemeral: true,
     });
 }
