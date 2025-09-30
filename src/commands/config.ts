@@ -1,6 +1,7 @@
 import {
     APIRole,
     ChatInputCommandInteraction,
+    EmbedBuilder,
     PermissionsBitField,
     Role,
     roleMention,
