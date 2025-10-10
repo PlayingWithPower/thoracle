@@ -148,6 +148,7 @@ Configure various server settings (requires Manage Server permission):
 - **`/match pending`** - View pending (unconfirmed) matches
 - **`/match disputed`** - View disputed matches
 - **`/match accept <match-id>`** - Accept/confirm a match
+- **`/match accept-all`** - Accept all pending matches (with confirmation dialog)
 - **`/match delete <match-id>`** - Delete a match
 
 ## Match Flow

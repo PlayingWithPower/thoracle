@@ -1,4 +1,12 @@
-import { ChatInputCommandInteraction, EmbedBuilder } from 'discord.js';
+import { 
+    ActionRowBuilder, 
+    ButtonBuilder, 
+    ButtonStyle, 
+    ChatInputCommandInteraction, 
+    ComponentType,
+    EmbedBuilder,
+    MessageActionRowComponentBuilder 
+} from 'discord.js';
 import { client } from '..';
 import { Deck, IDeck } from '../database/Deck';
 import { IMatch, Match } from '../database/Match';
@@ -28,6 +36,10 @@ const acceptMatch = newSubcommand()
             .setRequired(true)
     );
 
+const acceptAllMatches = newSubcommand()
+    .setName('accept-all')
+    .setDescription('Accepts all pending matches.');
+
 const deleteMatch = newSubcommand()
     .setName('delete')
     .setDescription('Deletes a match.')
@@ -53,6 +65,7 @@ export = <Command>{
         .addSubcommand(pendingMatches)
         .addSubcommand(disputedMatches)
         .addSubcommand(acceptMatch)
+        .addSubcommand(acceptAllMatches)
         .addSubcommand(deleteMatch)
         .addSubcommand(listMatches),
 
@@ -71,6 +84,10 @@ export = <Command>{
                     interaction,
                     interaction.options.getString('match', true)
                 );
+                break;
+
+            case 'accept-all':
+                await handleAcceptAll(interaction);
                 break;
 
             case 'delete':
@@ -237,6 +254,129 @@ async function handleAccept(
         content: 'That match has been accepted.',
         ephemeral: true,
     });
+}
+
+async function handleAcceptAll(interaction: ChatInputCommandInteraction) {
+    if (!interaction.memberPermissions?.has('ManageGuild')) {
+        return await interaction.reply({
+            content: 'You do not have permission to do this.',
+            ephemeral: true,
+        });
+    }
+
+    const season = await Season.findOne({
+        guildId: interaction.guildId!,
+        endDate: { $exists: false },
+    });
+
+    if (!season) {
+        return await interaction.reply({
+            content: 'There is no current season.',
+            ephemeral: true,
+        });
+    }
+
+    const matches: IMatch[] = await Match.find({
+        guildId: interaction.guildId!,
+        season: season._id,
+        'players.confirmed': false,
+    }).sort({ _id: 1 });
+
+    if (!matches.length) {
+        return await interaction.reply({
+            content: 'There are no pending matches.',
+            ephemeral: true,
+        });
+    }
+
+    const embed = new EmbedBuilder()
+        .setTitle('Accept All Pending Matches')
+        .setDescription(
+            `You are about to accept **${matches.length}** pending match${matches.length === 1 ? '' : 'es'}.\n\n` +
+            'This will confirm all pending matches for the current season. ' +
+            'Are you sure you want to proceed?'
+        )
+        .setColor('Yellow');
+
+    const actionRow = new ActionRowBuilder<MessageActionRowComponentBuilder>()
+        .addComponents(
+            new ButtonBuilder()
+                .setCustomId('confirm-accept-all')
+                .setLabel('Accept All')
+                .setStyle(ButtonStyle.Success),
+            new ButtonBuilder()
+                .setCustomId('cancel-accept-all')
+                .setLabel('Cancel')
+                .setStyle(ButtonStyle.Secondary)
+        );
+
+    const response = await interaction.reply({
+        embeds: [embed],
+        components: [actionRow],
+        ephemeral: true,
+    });
+
+    try {
+        const confirmation = await response.awaitMessageComponent({
+            filter: (i) => i.user.id === interaction.user.id,
+            componentType: ComponentType.Button,
+            time: 60_000, // 60 seconds timeout
+        });
+
+        if (confirmation.customId === 'confirm-accept-all') {
+            // Accept all matches
+            let acceptedCount = 0;
+            for (const match of matches) {
+                let needsUpdate = false;
+                
+                for (const player of match.players) {
+                    if (!player.confirmed) {
+                        player.confirmed = true;
+                        needsUpdate = true;
+                    }
+                }
+
+                if (needsUpdate) {
+                    match.confirmedAt = new Date();
+                    await match.save();
+                    acceptedCount++;
+                }
+            }
+
+            await confirmation.update({
+                embeds: [
+                    new EmbedBuilder()
+                        .setTitle('Matches Accepted')
+                        .setDescription(
+                            `Successfully accepted **${acceptedCount}** match${acceptedCount === 1 ? '' : 'es'}.`
+                        )
+                        .setColor('Green')
+                ],
+                components: [],
+            });
+        } else {
+            await confirmation.update({
+                embeds: [
+                    new EmbedBuilder()
+                        .setTitle('Cancelled')
+                        .setDescription('No matches were accepted.')
+                        .setColor('Red')
+                ],
+                components: [],
+            });
+        }
+    } catch (error) {
+        // Timeout or other error
+        await interaction.editReply({
+            embeds: [
+                new EmbedBuilder()
+                    .setTitle('Timed Out')
+                    .setDescription('The confirmation has expired. No matches were accepted.')
+                    .setColor('Red')
+            ],
+            components: [],
+        });
+    }
 }
 
 async function handleDelete(
