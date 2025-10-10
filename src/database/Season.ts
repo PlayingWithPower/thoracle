@@ -1,7 +1,8 @@
-import { Document, Schema } from 'mongoose';
+import { Document, Schema, Types } from 'mongoose';
 import { connection } from '../database';
 
 export interface ISeason extends Document {
+    _id: Types.ObjectId;
     guildId: string;
     name: string;
     startDate: Date;

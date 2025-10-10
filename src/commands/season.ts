@@ -4,6 +4,7 @@ import {
     TimestampStyles,
     time,
 } from 'discord.js';
+import { Types } from 'mongoose';
 import { Match } from '../database/Match';
 import { ISeason, Season } from '../database/Season';
 import { Command, newCommand, newSubcommand } from '../types/Command';
@@ -33,11 +34,16 @@ const endSeason = newSubcommand()
     .setName('end')
     .setDescription('Ends the current season.');
 
+const listSeasons = newSubcommand()
+    .setName('list')
+    .setDescription('Lists all seasons for this server.');
+
 export = <Command>{
     data: command
         .addSubcommand(seasonInfo)
         .addSubcommand(startSeason)
-        .addSubcommand(endSeason),
+        .addSubcommand(endSeason)
+        .addSubcommand(listSeasons),
 
     async execute(interaction: ChatInputCommandInteraction) {
         switch (interaction.options.getSubcommand()) {
@@ -57,6 +63,10 @@ export = <Command>{
 
             case 'end':
                 await handleEnd(interaction);
+                break;
+
+            case 'list':
+                await handleList(interaction);
                 break;
         }
     },
@@ -87,7 +97,9 @@ async function handleInfo(
         ? time(season.endDate, TimestampStyles.LongDateTime)
         : 'The season has not ended yet.';
 
-    const matchesPlayed = await Match.count({ season: season.id });
+    const matchesPlayed = await Match.count({ 
+        season: season._id as Types.ObjectId 
+    });
     const matchesPlayedText = `${matchesPlayed} game${
         matchesPlayed === 1 ? '' : 's'
     } have been played.`;
@@ -174,6 +186,51 @@ async function handleEnd(interaction: ChatInputCommandInteraction) {
 
     await interaction.reply({
         content: 'The current season is now over.',
+        ephemeral: true,
+    });
+}
+
+async function handleList(interaction: ChatInputCommandInteraction) {
+    const seasons: ISeason[] = await Season.find({
+        guildId: interaction.guildId!,
+    }).sort({ startDate: -1 });
+
+    if (seasons.length === 0) {
+        return await interaction.reply({
+            content: 'There are no seasons for this server.',
+            ephemeral: true,
+        });
+    }
+
+    const embed = new EmbedBuilder()
+        .setTitle(`Seasons - ${interaction.guild?.name}`)
+        .setDescription('All seasons for this server:')
+        .setColor('Blue');
+
+    for (const season of seasons) {
+        const startDateText = time(season.startDate, TimestampStyles.ShortDate);
+        const endDateText = season.endDate
+            ? time(season.endDate, TimestampStyles.ShortDate)
+            : 'Active';
+
+        const matchesPlayed = await Match.count({ 
+        season: season._id as Types.ObjectId 
+    });
+        const matchesPlayedText = `${matchesPlayed} game${
+            matchesPlayed === 1 ? '' : 's'
+        }`;
+
+        const status = season.endDate ? '🔴' : '🟢';
+
+        embed.addFields({
+            name: `${status} ${season.name}`,
+            value: `**Dates:** ${startDateText} - ${endDateText}\n**Games Played:** ${matchesPlayedText}`,
+            inline: false,
+        });
+    }
+
+    await interaction.reply({
+        embeds: [embed],
         ephemeral: true,
     });
 }

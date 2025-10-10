@@ -123,6 +123,9 @@ View your match history with optional filtering by deck or season.
 #### `/season info [name]` - Season Information
 View information about the current season or a specific season.
 
+#### `/season list` - List All Seasons
+View all seasons for the server, including their dates and total games played.
+
 #### `/info` - Bot Information
 Display information about the bot and support resources.
 
