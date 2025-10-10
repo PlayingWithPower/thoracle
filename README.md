@@ -143,6 +143,7 @@ Configure various server settings (requires Manage Server permission):
 #### `/season` - Season Management
 - **`/season start <name>`** - Start a new season
 - **`/season end`** - End the current season
+- **`/season reopen <name>`** - Reopen a previously closed season
 
 #### `/match` - Match Management
 - **`/match pending`** - View pending (unconfirmed) matches
