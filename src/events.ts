@@ -8,9 +8,10 @@ import {
 } from './events/match';
 import { client } from './index';
 import { handleError } from './utils/interaction';
+import { logger } from './utils/logger';
 
 client.once('ready', () => {
-    console.log(`${client.user!.tag} is now online.`);
+    logger.info(`${client.user!.tag} is now online.`);
 });
 
 client.on('interactionCreate', async (interaction) => {
