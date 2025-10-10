@@ -28,7 +28,7 @@ export = <Command>{
     data: command,
 
     async execute(interaction: ChatInputCommandInteraction) {
-        logMatch(
+        await logMatch(
             interaction,
             [
                 interaction.user.id,

@@ -9,9 +9,14 @@ export const validHosts = [
 ];
 
 export function validateDeckList(deckList: string): boolean {
-    const hostname = new URL(deckList).hostname
-        .replace(/^www\./, '')
-        .toLowerCase();
+    try {
+        const hostname = new URL(deckList).hostname
+            .replace(/^www\./, '')
+            .toLowerCase();
 
-    return validHosts.includes(hostname);
+        return validHosts.includes(hostname);
+    } catch (error) {
+        // Invalid URL format
+        return false;
+    }
 }
