@@ -74,7 +74,9 @@ async function handleInfo(
     );
 
     if (!season) {
+        const warningEmbed = createShutdownWarningEmbed();
         return await interaction.reply({
+            embeds: [warningEmbed],
             content:
                 name === null
                     ? 'There is no current season.'
@@ -118,7 +120,9 @@ async function handleStart(
     name: string
 ) {
     if (!interaction.memberPermissions?.has('ManageGuild')) {
+        const warningEmbed = createShutdownWarningEmbed();
         return await interaction.reply({
+            embeds: [warningEmbed],
             content: 'You do not have permission to do this.',
             ephemeral: true,
         });
@@ -132,13 +136,16 @@ async function handleStart(
     });
 
     if (existingSeason) {
+        const warningEmbed = createShutdownWarningEmbed();
         if (existingSeason.endDate) {
             return await interaction.reply({
+                embeds: [warningEmbed],
                 content: 'There is already a season with that name.',
                 ephemeral: true,
             });
         } else {
             return await interaction.reply({
+                embeds: [warningEmbed],
                 content: 'There is already an active season.',
                 ephemeral: true,
             });
@@ -147,7 +154,9 @@ async function handleStart(
 
     await Season.create({ guildId: interaction.guildId!, name });
 
+    const warningEmbed = createShutdownWarningEmbed();
     await interaction.reply({
+        embeds: [warningEmbed],
         content: 'The season has been started.',
         ephemeral: true,
     });
@@ -155,7 +164,9 @@ async function handleStart(
 
 async function handleEnd(interaction: ChatInputCommandInteraction) {
     if (!interaction.memberPermissions?.has('ManageGuild')) {
+        const warningEmbed = createShutdownWarningEmbed();
         return await interaction.reply({
+            embeds: [warningEmbed],
             content: 'You do not have permission to do this.',
             ephemeral: true,
         });
@@ -167,13 +178,17 @@ async function handleEnd(interaction: ChatInputCommandInteraction) {
     );
 
     if (!existingSeason) {
+        const warningEmbed = createShutdownWarningEmbed();
         return await interaction.reply({
+            embeds: [warningEmbed],
             content: 'There is no current season.',
             ephemeral: true,
         });
     }
 
+    const warningEmbed = createShutdownWarningEmbed();
     await interaction.reply({
+        embeds: [warningEmbed],
         content: 'The current season is now over.',
         ephemeral: true,
     });

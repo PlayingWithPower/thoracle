@@ -7,6 +7,7 @@ import { fetchProfile } from '../database/Profile';
 import { ISeason, Season } from '../database/Season';
 import { Command, newCommand, newSubcommand } from '../types/Command';
 import { validHosts, validateDeckList } from '../utils/validation';
+import { createShutdownWarningEmbed } from '../utils/warning';
 
 const command = newCommand()
     .setName('deck')
@@ -171,7 +172,9 @@ async function handleCreate(
     });
 
     if (deckCount >= config.deckLimit) {
+        const warningEmbed = createShutdownWarningEmbed();
         return await interaction.reply({
+            embeds: [warningEmbed],
             content: 'You have reached the deck limit.',
             ephemeral: true,
         });
@@ -184,7 +187,9 @@ async function handleCreate(
     });
 
     if (existingDeck) {
+        const warningEmbed = createShutdownWarningEmbed();
         return await interaction.reply({
+            embeds: [warningEmbed],
             content: 'You already have a deck with that name.',
             ephemeral: true,
         });
@@ -196,7 +201,9 @@ async function handleCreate(
                 .map((host) => '`' + host + '`')
                 .join(', ');
 
+            const warningEmbed = createShutdownWarningEmbed();
             return await interaction.reply({
+                embeds: [warningEmbed],
                 content: `The deck list must be from one of the following websites: ${hostText}.`,
                 ephemeral: true,
             });
@@ -214,7 +221,9 @@ async function handleCreate(
         $set: { currentDeck: deck._id },
     });
 
+    const warningEmbed = createShutdownWarningEmbed();
     await interaction.reply({
+        embeds: [warningEmbed],
         content: 'The deck has been created and set as current.',
         ephemeral: true,
     });
@@ -227,7 +236,9 @@ async function handleList(interaction: ChatInputCommandInteraction) {
     }).sort({ _id: -1 });
 
     if (!decks.length) {
+        const warningEmbed = createShutdownWarningEmbed();
         return await interaction.reply({
+            embeds: [warningEmbed],
             content: 'You have not created any decks.',
             ephemeral: true,
         });
@@ -246,7 +257,7 @@ async function handleList(interaction: ChatInputCommandInteraction) {
         .setColor('Blue');
 
     await interaction.reply({
-        embeds: [embed],
+        embeds: [createShutdownWarningEmbed(), embed],
         ephemeral: true,
     });
 }
@@ -262,7 +273,9 @@ async function handleUse(
     });
 
     if (!deck) {
+        const warningEmbed = createShutdownWarningEmbed();
         return await interaction.reply({
+            embeds: [warningEmbed],
             content: 'You do not have a deck with that name.',
             ephemeral: true,
         });
@@ -272,7 +285,9 @@ async function handleUse(
         $set: { currentDeck: deck._id },
     });
 
+    const warningEmbed = createShutdownWarningEmbed();
     await interaction.reply({
+        embeds: [warningEmbed],
         content: 'The deck has been set as current.',
         ephemeral: true,
     });
@@ -289,7 +304,9 @@ async function handleDelete(
     });
 
     if (!deck) {
+        const warningEmbed = createShutdownWarningEmbed();
         return await interaction.reply({
+            embeds: [warningEmbed],
             content: 'You do not have a deck with that name.',
             ephemeral: true,
         });
@@ -312,7 +329,9 @@ async function handleDelete(
 
     await deck.deleteOne();
 
+    const warningEmbed = createShutdownWarningEmbed();
     await interaction.reply({
+        embeds: [warningEmbed],
         content: 'The deck has been deleted.',
         ephemeral: true,
     });
@@ -330,7 +349,9 @@ async function handleRename(
     });
 
     if (!deck) {
+        const warningEmbed = createShutdownWarningEmbed();
         return await interaction.reply({
+            embeds: [warningEmbed],
             content: 'You do not have a deck with that name.',
             ephemeral: true,
         });
@@ -343,7 +364,9 @@ async function handleRename(
     });
 
     if (existingDeck) {
+        const warningEmbed = createShutdownWarningEmbed();
         return await interaction.reply({
+            embeds: [warningEmbed],
             content: 'You already have a deck with that name.',
             ephemeral: true,
         });
@@ -353,7 +376,9 @@ async function handleRename(
 
     await deck.save();
 
+    const warningEmbed = createShutdownWarningEmbed();
     await interaction.reply({
+        embeds: [warningEmbed],
         content: 'The deck has been renamed.',
         ephemeral: true,
     });
@@ -371,7 +396,9 @@ async function handleSetList(
     });
 
     if (!deck) {
+        const warningEmbed = createShutdownWarningEmbed();
         return await interaction.reply({
+            embeds: [warningEmbed],
             content: 'You do not have a deck with that name.',
             ephemeral: true,
         });
@@ -380,7 +407,9 @@ async function handleSetList(
     if (!validateDeckList(newDeckList)) {
         const hostText = validHosts.map((host) => '`' + host + '`').join(', ');
 
+        const warningEmbed = createShutdownWarningEmbed();
         return await interaction.reply({
+            embeds: [warningEmbed],
             content: `The deck list must be from one of the following websites: ${hostText}.`,
             ephemeral: true,
         });
@@ -390,7 +419,9 @@ async function handleSetList(
 
     await deck.save();
 
+    const warningEmbed = createShutdownWarningEmbed();
     await interaction.reply({
+        embeds: [warningEmbed],
         content: 'The deck list has been set.',
         ephemeral: true,
     });
@@ -417,7 +448,9 @@ async function handleStats(
               });
 
     if (!deck) {
+        const warningEmbed = createShutdownWarningEmbed();
         return await interaction.reply({
+            embeds: [warningEmbed],
             content:
                 name === null
                     ? 'No deck is currently selected.'
@@ -512,7 +545,7 @@ async function handleStats(
     ]);
 
     await interaction.reply({
-        embeds: [embed],
+        embeds: [createShutdownWarningEmbed(), embed],
         ephemeral: true,
     });
 }

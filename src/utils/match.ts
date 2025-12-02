@@ -15,6 +15,7 @@ import { Deck, IDeck } from '../database/Deck';
 import { IMatch, Match } from '../database/Match';
 import { fetchProfile } from '../database/Profile';
 import { ISeason, Season } from '../database/Season';
+import { createShutdownWarningEmbed } from './warning';
 
 export async function logMatch(
     interaction: ChatInputCommandInteraction,
@@ -27,14 +28,18 @@ export async function logMatch(
     });
 
     if (!season) {
+        const warningEmbed = createShutdownWarningEmbed();
         return await interaction.reply({
+            embeds: [warningEmbed],
             content: 'There is no current season.',
             ephemeral: true,
         });
     }
 
     if (new Set(playerIds).size !== playerIds.length) {
+        const warningEmbed = createShutdownWarningEmbed();
         return await interaction.reply({
+            embeds: [warningEmbed],
             content: 'All players in a match must be unique.',
             ephemeral: true,
         });
@@ -110,7 +115,7 @@ export async function logMatch(
 
     await interaction.reply({
         content: playerIds.map((userId) => userMention(userId)).join(', '),
-        embeds: [embed],
+        embeds: [createShutdownWarningEmbed(), embed],
         components: [actionRow],
     });
 

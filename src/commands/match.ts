@@ -93,7 +93,9 @@ export = <Command>{
 
 async function handlePending(interaction: ChatInputCommandInteraction) {
     if (!interaction.memberPermissions?.has('ManageGuild')) {
+        const warningEmbed = createShutdownWarningEmbed();
         return await interaction.reply({
+            embeds: [warningEmbed],
             content: 'You do not have permission to do this.',
             ephemeral: true,
         });
@@ -105,7 +107,9 @@ async function handlePending(interaction: ChatInputCommandInteraction) {
     });
 
     if (!season) {
+        const warningEmbed = createShutdownWarningEmbed();
         return await interaction.reply({
+            embeds: [warningEmbed],
             content: 'There is no current season.',
             ephemeral: true,
         });
@@ -118,7 +122,9 @@ async function handlePending(interaction: ChatInputCommandInteraction) {
     }).sort({ _id: 1 });
 
     if (!matches.length) {
+        const warningEmbed = createShutdownWarningEmbed();
         return await interaction.reply({
+            embeds: [warningEmbed],
             content: 'There are no pending matches.',
             ephemeral: true,
         });
@@ -140,7 +146,9 @@ async function handlePending(interaction: ChatInputCommandInteraction) {
 
 async function handleDisputed(interaction: ChatInputCommandInteraction) {
     if (!interaction.memberPermissions?.has('ManageGuild')) {
+        const warningEmbed = createShutdownWarningEmbed();
         return await interaction.reply({
+            embeds: [warningEmbed],
             content: 'You do not have permission to do this.',
             ephemeral: true,
         });
@@ -152,7 +160,9 @@ async function handleDisputed(interaction: ChatInputCommandInteraction) {
     });
 
     if (!season) {
+        const warningEmbed = createShutdownWarningEmbed();
         return await interaction.reply({
+            embeds: [warningEmbed],
             content: 'There is no current season.',
             ephemeral: true,
         });
@@ -166,7 +176,9 @@ async function handleDisputed(interaction: ChatInputCommandInteraction) {
     }).sort({ _id: 1 });
 
     if (!matches.length) {
+        const warningEmbed = createShutdownWarningEmbed();
         return await interaction.reply({
+            embeds: [warningEmbed],
             content: 'There are no disputed matches.',
             ephemeral: true,
         });
@@ -193,7 +205,9 @@ async function handleAccept(
     id: string
 ) {
     if (!interaction.memberPermissions?.has('ManageGuild')) {
+        const warningEmbed = createShutdownWarningEmbed();
         return await interaction.reply({
+            embeds: [warningEmbed],
             content: 'You do not have permission to do this.',
             ephemeral: true,
         });
@@ -202,14 +216,18 @@ async function handleAccept(
     const match: IMatch | null = await Match.findById(id);
 
     if (!match) {
+        const warningEmbed = createShutdownWarningEmbed();
         return await interaction.reply({
+            embeds: [warningEmbed],
             content: 'There is no match with that id.',
             ephemeral: true,
         });
     }
 
     if (match.guildId !== interaction.guildId) {
+        const warningEmbed = createShutdownWarningEmbed();
         return await interaction.reply({
+            embeds: [warningEmbed],
             content: 'That match is from another server.',
             ephemeral: true,
         });
@@ -224,7 +242,9 @@ async function handleAccept(
     }
 
     if (confirmed) {
+        const warningEmbed = createShutdownWarningEmbed();
         return await interaction.reply({
+            embeds: [warningEmbed],
             content: 'That match has already been confirmed by all players.',
             ephemeral: true,
         });
@@ -234,7 +254,9 @@ async function handleAccept(
 
     await match.save();
 
+    const warningEmbed = createShutdownWarningEmbed();
     await interaction.reply({
+        embeds: [warningEmbed],
         content: 'That match has been accepted.',
         ephemeral: true,
     });
@@ -245,7 +267,9 @@ async function handleDelete(
     id: string
 ) {
     if (!interaction.memberPermissions?.has('ManageGuild')) {
+        const warningEmbed = createShutdownWarningEmbed();
         return await interaction.reply({
+            embeds: [warningEmbed],
             content: 'You do not have permission to do this.',
             ephemeral: true,
         });
@@ -254,14 +278,18 @@ async function handleDelete(
     const match: IMatch | null = await Match.findById(id);
 
     if (!match) {
+        const warningEmbed = createShutdownWarningEmbed();
         return await interaction.reply({
+            embeds: [warningEmbed],
             content: 'There is no match with that id.',
             ephemeral: true,
         });
     }
 
     if (match.guildId !== interaction.guildId) {
+        const warningEmbed = createShutdownWarningEmbed();
         return await interaction.reply({
+            embeds: [warningEmbed],
             content: 'That match is from another server.',
             ephemeral: true,
         });
@@ -283,7 +311,9 @@ async function handleDelete(
 
     await disputeChannel?.delete().catch(() => null);
 
+    const warningEmbed = createShutdownWarningEmbed();
     await interaction.reply({
+        embeds: [warningEmbed],
         content: 'That match has been deleted.',
         ephemeral: true,
     });
@@ -303,7 +333,9 @@ async function handleList(
         : null;
 
     if (deckName && !deck) {
+        const warningEmbed = createShutdownWarningEmbed();
         return await interaction.reply({
+            embeds: [warningEmbed],
             content: 'You have no deck with that name.',
             ephemeral: true,
         });
@@ -317,7 +349,9 @@ async function handleList(
         : null;
 
     if (seasonName && !season) {
+        const warningEmbed = createShutdownWarningEmbed();
         return await interaction.reply({
+            embeds: [warningEmbed],
             content: 'There is no season with that name.',
             ephemeral: true,
         });
@@ -338,7 +372,9 @@ async function handleList(
         deckName || seasonName ? ' with those constraints' : '';
 
     if (!matches.length) {
+        const warningEmbed = createShutdownWarningEmbed();
         return await interaction.reply({
+            embeds: [warningEmbed],
             content: `You have not played any matches${constraintsText}.`,
             ephemeral: true,
         });

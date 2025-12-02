@@ -3,6 +3,7 @@ import { fetchConfig } from '../database/Config';
 import { ISeason, Season } from '../database/Season';
 import { Command, newCommand } from '../types/Command';
 import { leaderboardFields } from '../utils/leaderboard';
+import { createShutdownWarningEmbed } from '../utils/warning';
 
 const command = newCommand()
     .setName('leaderboard')
@@ -24,7 +25,9 @@ export = <Command>{
         );
 
         if (!season) {
+            const warningEmbed = createShutdownWarningEmbed();
             return await interaction.reply({
+                embeds: [warningEmbed],
                 content:
                     name === null
                         ? 'There is no current season.'
@@ -51,6 +54,6 @@ export = <Command>{
             .setColor('Purple')
             .addFields(fields);
 
-        await interaction.reply({ embeds: [embed] });
+        await interaction.reply({ embeds: [createShutdownWarningEmbed(), embed] });
     },
 };

@@ -9,6 +9,7 @@ import { IMatch, Match } from '../database/Match';
 import { IProfile, fetchProfile } from '../database/Profile';
 import { ISeason, Season } from '../database/Season';
 import { Command, newCommand } from '../types/Command';
+import { createShutdownWarningEmbed } from '../utils/warning';
 
 const command = newCommand()
     .setName('profile')
@@ -129,7 +130,7 @@ export = <Command>{
         ]);
 
         await interaction.reply({
-            embeds: [embed],
+            embeds: [createShutdownWarningEmbed(), embed],
             ephemeral: true,
         });
     },
