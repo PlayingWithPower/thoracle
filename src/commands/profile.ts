@@ -19,6 +19,14 @@ export = <Command>{
     data: command,
 
     async execute(interaction: ChatInputCommandInteraction) {
+        const warningEmbed = createShutdownWarningEmbed();
+        await interaction.reply({
+            embeds: [warningEmbed],
+            ephemeral: true,
+        });
+
+        // TEMPORARILY DISABLED - UNCOMMENT TO RESTORE FUNCTIONALITY
+        /*
         const profile: IProfile = await fetchProfile(
             interaction.guildId!,
             interaction.user.id
@@ -133,5 +141,6 @@ export = <Command>{
             embeds: [createShutdownWarningEmbed(), embed],
             ephemeral: true,
         });
+        */
     },
 };

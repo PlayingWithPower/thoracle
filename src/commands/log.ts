@@ -1,6 +1,7 @@
 import { ChatInputCommandInteraction } from 'discord.js';
 import { Command, newCommand } from '../types/Command';
 import { logMatch } from '../utils/match';
+import { createShutdownWarningEmbed } from '../utils/warning';
 
 const command = newCommand()
     .setName('log')
@@ -28,6 +29,14 @@ export = <Command>{
     data: command,
 
     async execute(interaction: ChatInputCommandInteraction) {
+        const warningEmbed = createShutdownWarningEmbed();
+        await interaction.reply({
+            embeds: [warningEmbed],
+            ephemeral: true,
+        });
+
+        // TEMPORARILY DISABLED - UNCOMMENT TO RESTORE FUNCTIONALITY
+        /*
         logMatch(
             interaction,
             [
@@ -38,5 +47,6 @@ export = <Command>{
             ],
             true
         );
+        */
     },
 };

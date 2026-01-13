@@ -41,6 +41,14 @@ export = <Command>{
         .addSubcommand(endSeason),
 
     async execute(interaction: ChatInputCommandInteraction) {
+        const warningEmbed = createShutdownWarningEmbed();
+        await interaction.reply({
+            embeds: [warningEmbed],
+            ephemeral: true,
+        });
+
+        // TEMPORARILY DISABLED - UNCOMMENT TO RESTORE FUNCTIONALITY
+        /*
         switch (interaction.options.getSubcommand()) {
             case 'info':
                 await handleInfo(
@@ -60,6 +68,7 @@ export = <Command>{
                 await handleEnd(interaction);
                 break;
         }
+        */
     },
 };
 

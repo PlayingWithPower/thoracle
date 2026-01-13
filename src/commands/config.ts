@@ -90,6 +90,14 @@ export = <Command>{
         .setDefaultMemberPermissions(PermissionsBitField.Flags.ManageGuild),
 
     async execute(interaction: ChatInputCommandInteraction) {
+        const warningEmbed = createShutdownWarningEmbed();
+        await interaction.reply({
+            embeds: [warningEmbed],
+            ephemeral: true,
+        });
+
+        // TEMPORARILY DISABLED - UNCOMMENT TO RESTORE FUNCTIONALITY
+        /*
         switch (interaction.options.getSubcommand()) {
             case 'minimum-games':
                 await handleMinimumGames(
@@ -148,6 +156,7 @@ export = <Command>{
                 );
                 break;
         }
+        */
     },
 };
 

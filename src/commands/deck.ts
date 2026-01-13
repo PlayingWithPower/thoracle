@@ -106,6 +106,14 @@ export = <Command>{
         .addSubcommand(deckStats),
 
     async execute(interaction: ChatInputCommandInteraction) {
+        const warningEmbed = createShutdownWarningEmbed();
+        await interaction.reply({
+            embeds: [warningEmbed],
+            ephemeral: true,
+        });
+
+        // TEMPORARILY DISABLED - UNCOMMENT TO RESTORE FUNCTIONALITY
+        /*
         switch (interaction.options.getSubcommand()) {
             case 'create':
                 await handleCreate(
@@ -156,6 +164,7 @@ export = <Command>{
                 );
                 break;
         }
+        */
     },
 };
 

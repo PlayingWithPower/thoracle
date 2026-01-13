@@ -58,6 +58,14 @@ export = <Command>{
         .addSubcommand(listMatches),
 
     async execute(interaction: ChatInputCommandInteraction) {
+        const warningEmbed = createShutdownWarningEmbed();
+        await interaction.reply({
+            embeds: [warningEmbed],
+            ephemeral: true,
+        });
+
+        // TEMPORARILY DISABLED - UNCOMMENT TO RESTORE FUNCTIONALITY
+        /*
         switch (interaction.options.getSubcommand()) {
             case 'pending':
                 await handlePending(interaction);
@@ -88,6 +96,7 @@ export = <Command>{
                     interaction.options.getString('season-name')
                 );
         }
+        */
     },
 };
 

@@ -11,6 +11,14 @@ export = <Command>{
     data: command,
 
     async execute(interaction: ChatInputCommandInteraction) {
+        const warningEmbed = createShutdownWarningEmbed();
+        await interaction.reply({
+            embeds: [warningEmbed],
+            ephemeral: true,
+        });
+
+        // TEMPORARILY DISABLED - UNCOMMENT TO RESTORE FUNCTIONALITY
+        /*
         const author = await interaction.client.users
             .fetch('239457433938821121')
             .catch(() => null);
@@ -40,5 +48,6 @@ export = <Command>{
             embeds: [createShutdownWarningEmbed(), embed],
             ephemeral: true,
         });
+        */
     },
 };

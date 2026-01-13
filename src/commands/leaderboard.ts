@@ -16,6 +16,14 @@ export = <Command>{
     data: command,
 
     async execute(interaction: ChatInputCommandInteraction) {
+        const warningEmbed = createShutdownWarningEmbed();
+        await interaction.reply({
+            embeds: [warningEmbed],
+            ephemeral: true,
+        });
+
+        // TEMPORARILY DISABLED - UNCOMMENT TO RESTORE FUNCTIONALITY
+        /*
         const name = interaction.options.getString('season');
 
         const season: ISeason | null = await Season.findOne(
@@ -55,5 +63,6 @@ export = <Command>{
             .addFields(fields);
 
         await interaction.reply({ embeds: [createShutdownWarningEmbed(), embed] });
+        */
     },
 };
