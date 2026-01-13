@@ -4,14 +4,24 @@
         "target": "ESNext",
         "module": "CommonJS",
         "outDir": "dist",
+        "rootDir": "src",
         "downlevelIteration": true,
         "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "resolveJsonModule": true,
+        "forceConsistentCasingInFileNames": true,
         "noImplicitAny": true,
         "noImplicitThis": true,
         "noImplicitOverride": true,
         "noFallthroughCasesInSwitch": true,
+        "skipLibCheck": true,
         "inlineSourceMap": true,
-        "strict": true
+        "strict": true,
+        "strictNullChecks": true,
+        "strictFunctionTypes": true,
+        "strictBindCallApply": true,
+        "strictPropertyInitialization": true
     },
-    "include": ["src"]
+    "include": ["src"],
+    "exclude": ["node_modules", "dist"]
 }
