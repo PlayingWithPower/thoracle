@@ -4,6 +4,21 @@ The Playing With Power patreon Discord server's bot for managing EDH (Elder Drag
 
 Join the Discord server for help and info: https://discord.gg/drrVQNrzGa
 
+## Documentation
+
+- **[Installation & Usage](#installation)** - Getting started with Thoracle
+- **[Maintenance Guide](MAINTENANCE.md)** - Troubleshooting, backups, and routine maintenance
+- **[Deployment Guide](DEPLOYMENT.md)** - Production deployment and hosting options
+- **[Architecture Documentation](ARCHITECTURE.md)** - Internal structure and technical details
+
+### For New Maintainers
+
+If you're taking over this project, start here:
+
+1. **[DEPLOYMENT.md](DEPLOYMENT.md)** - Set up your production environment
+2. **[MAINTENANCE.md](MAINTENANCE.md)** - Learn daily operations and troubleshooting
+3. **[ARCHITECTURE.md](ARCHITECTURE.md)** - Understand the codebase structure
+
 ## Features
 
 - **Match Logging**: Log 4-player EDH matches with winner tracking
@@ -17,10 +32,12 @@ Join the Discord server for help and info: https://discord.gg/drrVQNrzGa
 
 ### Prerequisites
 
-- Node.js (v16 or higher)
-- MongoDB database
-- Discord Bot Token
+- **Node.js** v16 or higher ([download](https://nodejs.org/))
+- **MongoDB** database ([MongoDB Atlas](https://www.mongodb.com/cloud/atlas) free tier or self-hosted)
+- **Discord Bot Token** from [Discord Developer Portal](https://discord.com/developers/applications)
 - Discord Application with bot permissions
+
+> **Note**: For detailed deployment instructions including hosting options and production setup, see [DEPLOYMENT.md](DEPLOYMENT.md)
 
 ### Setup
 
@@ -166,6 +183,26 @@ The bot supports deck lists from the following platforms:
 - Deckstats
 - MTGGoldfish
 
+## Troubleshooting
+
+### Quick Fixes
+
+**Bot not responding to commands?**
+- Verify bot is online in Discord
+- Re-register commands: `npm run register-dev` (instant) or `npm run register` (up to 1 hour)
+- Check bot has proper permissions in channels
+
+**Database connection errors?**
+- Verify `DATABASE_URI` in `.env` file
+- Check MongoDB Atlas IP whitelist includes your server IP
+- Test connection: `mongosh "YOUR_DATABASE_URI"`
+
+**Commands not showing up?**
+- Use `npm run register-dev` for instant guild-specific registration
+- Global registration (`npm run register`) takes up to 1 hour to propagate
+
+For more troubleshooting help, see [MAINTENANCE.md](MAINTENANCE.md#troubleshooting).
+
 ## Development
 
 ### Project Structure
@@ -179,19 +216,37 @@ src/
 └── utils/             # Utility functions
 ```
 
+For detailed architecture information, see [ARCHITECTURE.md](ARCHITECTURE.md).
+
 ### Available Scripts
 - `npm run build` - Compile TypeScript to JavaScript
 - `npm start` - Start the production bot
 - `npm run dev` - Start the bot in development mode with auto-restart
-- `npm run register` - Register commands globally
-- `npm run register-dev` - Register commands for development guild
+- `npm run register` - Register commands globally (takes up to 1 hour)
+- `npm run register-dev` - Register commands for development guild (instant)
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Maintenance & Operations
+
+For maintainers and administrators:
+
+- **[Maintenance Guide](MAINTENANCE.md)** - Routine tasks, troubleshooting, database backups
+- **[Deployment Guide](DEPLOYMENT.md)** - Production hosting, process management, monitoring
+- **[Architecture Docs](ARCHITECTURE.md)** - Understanding the codebase
+
+### Common Maintenance Tasks
+
+- **Database Backups**: See [MAINTENANCE.md - Database Management](MAINTENANCE.md#database-management)
+- **Updating Dependencies**: See [MAINTENANCE.md - Dependency Updates](MAINTENANCE.md#dependency-updates)
+- **Handling Disputes**: See [MAINTENANCE.md - Data Integrity](MAINTENANCE.md#data-integrity)
+- **Season Management**: See [MAINTENANCE.md - Season Management](MAINTENANCE.md#season-management)
 
 ## Support
 
 For support and questions:
 - Join the Discord server: https://discord.gg/drrVQNrzGa
 - Create an issue on GitHub
+- Check [MAINTENANCE.md](MAINTENANCE.md) for troubleshooting guides
