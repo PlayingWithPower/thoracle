@@ -1,6 +1,11 @@
 import {
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle,
     ChatInputCommandInteraction,
+    ComponentType,
     EmbedBuilder,
+    MessageActionRowComponentBuilder,
     TimestampStyles,
     time,
 } from 'discord.js';
@@ -160,10 +165,10 @@ async function handleEnd(interaction: ChatInputCommandInteraction) {
         });
     }
 
-    const existingSeason: ISeason | null = await Season.findOneAndUpdate(
-        { guildId: interaction.guildId!, endDate: { $exists: false } },
-        { endDate: Date.now() }
-    );
+    const existingSeason: ISeason | null = await Season.findOne({
+        guildId: interaction.guildId!,
+        endDate: { $exists: false },
+    });
 
     if (!existingSeason) {
         return await interaction.reply({
@@ -172,8 +177,58 @@ async function handleEnd(interaction: ChatInputCommandInteraction) {
         });
     }
 
-    await interaction.reply({
-        content: 'The current season is now over.',
+    // Create confirmation buttons
+    const confirmButton = new ButtonBuilder()
+        .setCustomId('confirm_end_season')
+        .setLabel('Confirm')
+        .setStyle(ButtonStyle.Danger);
+
+    const cancelButton = new ButtonBuilder()
+        .setCustomId('cancel_end_season')
+        .setLabel('Cancel')
+        .setStyle(ButtonStyle.Secondary);
+
+    const actionRow = new ActionRowBuilder<MessageActionRowComponentBuilder>()
+        .addComponents(confirmButton, cancelButton);
+
+    // Send confirmation message
+    const response = await interaction.reply({
+        content: `You are about to end season ${existingSeason.name}. Are you sure?`,
+        components: [actionRow],
         ephemeral: true,
     });
+
+    // Wait for button interaction
+    try {
+        const confirmation = await response.awaitMessageComponent({
+            filter: (i) => i.user.id === interaction.user.id,
+            componentType: ComponentType.Button,
+            time: 60_000, // 60 seconds
+        });
+
+        if (confirmation.customId === 'confirm_end_season') {
+            // End the season
+            await Season.findOneAndUpdate(
+                { _id: existingSeason._id },
+                { endDate: Date.now() }
+            );
+
+            await confirmation.update({
+                content: 'The current season is now over.',
+                components: [],
+            });
+        } else {
+            // Cancel button pressed
+            await confirmation.update({
+                content: 'Request to end the season cancelled.',
+                components: [],
+            });
+        }
+    } catch (error) {
+        // Timeout - no button was pressed
+        await interaction.editReply({
+            content: 'Confirmation timed out. Request to end the season cancelled.',
+            components: [],
+        });
+    }
 }
